@@ -8,5 +8,4 @@
 #include <NunchuckMouse.h>
 
 void readInputs(Accessory *c, NunchuckInput *i);
-void printInputs();
 #endif //NUNCHUCK_MOUSER_MAIN_H

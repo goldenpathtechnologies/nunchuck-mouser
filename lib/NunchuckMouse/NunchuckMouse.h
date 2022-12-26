@@ -6,6 +6,9 @@
 #ifndef NUNCHUCK_MOUSER_NUNCHUCKMOUSE_H
 #define NUNCHUCK_MOUSER_NUNCHUCKMOUSE_H
 
+#include <Stream.h>
+#include <Arduino.h>
+
 struct NunchuckInput {
     int analogX;
     int analogY;
@@ -23,11 +26,8 @@ public:
     NunchuckMouse();
     void processInputs(NunchuckInput *input);
     void begin();
-    short getDirectionX() const;
-    short getDirectionY() const;
-    bool isMoving() const;
-    float getAnalogPercentX() const;
-    float getAnalogPercentY() const;
+    void printInputs(Stream &stream = Serial);
+
 private:
     const int DEAD_ZONE_LENGTH = 20;
     const int CENTER_X = 127;
@@ -44,7 +44,29 @@ private:
     const int RANGE_NEG_X = LIVE_NEG_X - MIN_X;
     const int RANGE_POS_Y = MAX_Y - LIVE_POS_Y;
     const int RANGE_NEG_Y = LIVE_NEG_Y - MIN_Y;
+    enum MouseMode {
+        MOUSE,
+        SCROLL,
+        FREEHAND
+    };
+    MouseMode mode = MOUSE;
     NunchuckInput currInput{};
     NunchuckInput prevInput{};
+
+    int getDirectionX() const;
+    int getDirectionY() const;
+    bool isMoving() const;
+    float getAnalogPercentX() const;
+    float getAnalogPercentY() const;
+    void updateMode();
+    static bool angleInRange(float value, float a0, float a1);
+    bool rollAngleInRange(float a0, float a1) const;
+    bool pitchAngleInRange(float a0, float a1) const;
+    bool scrollModeActivated();
+    void handleMouseMode();
+    static int getPrecision(float analogPercentage);
+    void handleScrollMode();
+    static int getScrollPrecision(float analogPercentage);
+    elapsedMillis scrollDelay;
 };
 #endif //NUNCHUCK_MOUSER_NUNCHUCKMOUSE_H
