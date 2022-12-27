@@ -47,7 +47,9 @@ private:
     enum MouseMode {
         MOUSE,
         SCROLL,
-        FREEHAND
+        SELECTION,
+        FREEHAND,
+        KEYBOARD
     };
     MouseMode mode = MOUSE;
     NunchuckInput currInput{};
@@ -68,5 +70,11 @@ private:
     void handleScrollMode();
     static int getScrollPrecision(float analogPercentage);
     elapsedMillis scrollDelay;
+    void handleFreehandMode();
+    static int getFreehandPrecision(float analogPercentage);
+    bool isFreehandMode = false;
+    void handleSelectionMode();
+    bool selectionModeActivated();
+    bool isKeyboardMode = false;
 };
 #endif //NUNCHUCK_MOUSER_NUNCHUCKMOUSE_H

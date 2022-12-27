@@ -25,7 +25,7 @@ void loop() {
     nunchuck.readData();
     readInputs(&nunchuck, &input);
     mouse.processInputs(&input);
-//    mouse.printInputs();
+    mouse.printInputs();
 }
 
 void readInputs(Accessory *c, NunchuckInput *i) {

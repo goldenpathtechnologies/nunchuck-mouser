@@ -15,6 +15,12 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
     updateMode();
 
     switch (mode) {
+        case SELECTION:
+            handleSelectionMode();
+            break;
+        case FREEHAND:
+            handleFreehandMode();
+            break;
         case SCROLL:
             handleScrollMode();
             break;
@@ -92,6 +98,12 @@ void NunchuckMouse::printInputs(Stream &stream) {
         case SCROLL:
             stream.print("SCROLL");
             break;
+        case FREEHAND:
+            stream.print("FREEHAND");
+            break;
+        case SELECTION:
+            stream.print("SELECTION");
+            break;
         default:
             stream.print("MOUSE");
     }
@@ -99,7 +111,11 @@ void NunchuckMouse::printInputs(Stream &stream) {
 }
 
 void NunchuckMouse::updateMode() {
-    if (scrollModeActivated()) {
+    if (selectionModeActivated()) {
+        mode = SELECTION;
+    } else if (isFreehandMode) {
+        mode = FREEHAND;
+    } else if (scrollModeActivated()) {
         mode = SCROLL;
     } else {
         mode = MOUSE;
@@ -126,7 +142,7 @@ bool NunchuckMouse::angleInRange(float value, float a0, float a1) {
 
 bool NunchuckMouse::scrollModeActivated() {
     return (rollAngleInRange(40, 120) || rollAngleInRange(-120, -40))
-        && pitchAngleInRange(-35, 35);
+        && pitchAngleInRange(-35, 35) && mode != FREEHAND;
 }
 
 void NunchuckMouse::handleMouseMode() {
@@ -148,8 +164,6 @@ void NunchuckMouse::handleMouseMode() {
     } else {
         Mouse.release(MOUSE_RIGHT);
     }
-
-    Serial.printf("X: %2d, Y: %2d\n", xMovement, yMovement);
 }
 
 int NunchuckMouse::getPrecision(float analogPercentage) {
@@ -183,6 +197,12 @@ void NunchuckMouse::handleScrollMode() {
         Mouse.scroll(0, xMovement);
         scrollDelay = 0;
     }
+
+    if (currInput.buttonC) {
+        Mouse.press(MOUSE_MIDDLE);
+    } else {
+        Mouse.release(MOUSE_MIDDLE);
+    }
 }
 
 int NunchuckMouse::getScrollPrecision(float analogPercentage) {
@@ -195,4 +215,65 @@ int NunchuckMouse::getScrollPrecision(float analogPercentage) {
     } else {
         return 3;
     }
+
+    // TODO: If scrolling occurs for more than a few seconds, increase the precision by a lot.
+}
+
+void NunchuckMouse::handleFreehandMode() {
+//    auto xMovement = static_cast<int8_t>(getFreehandPrecision(currInput.rollAngle));
+//    auto yMovement = static_cast<int8_t>(-1 * getFreehandPrecision(currInput.pitchAngle));
+
+    if (currInput.buttonC) {
+        isFreehandMode = false;
+    }
+    // TODO: Disabling movement in freehand mode until the algorithm is refined. Using roll and pitch angle is unwieldy.
+    //  I'll have to use the accelX, accelY, and accelZ values directly in an equation.
+    //Mouse.move(xMovement, yMovement);
+}
+
+int NunchuckMouse::getFreehandPrecision(float analogPercentage) {
+//    float data = abs(analogPercentage);
+//    int precision = 0;
+//    int direction = static_cast<int>(analogPercentage / data);
+//
+//    // Rolling dead zone -15 to 15
+//    // Max roll +/- 55
+//    // Pitch dead zone -20 to 20
+//    // Max pitch +/- 60
+//    // Greater than max has no movement, which allows for selection mode with given numbers
+//
+//    if (data < 15) {
+//        precision = 0;
+//    } else if (data < 25) {
+//        precision = 1;
+//    } else if (data < 30) {
+//        precision = 2;
+//    } else if (data < 35) {
+//        precision = 3;
+//    } else if (data < 40) {
+//        precision = 4;
+//    } else if (data < 45) {
+//        precision = 5;
+//    } else if (data < 50) {
+//        precision = 6;
+//    } else if (data < 55) {
+//        precision = 7;
+//    }
+//
+//    return precision * direction;
+    return 0;
+}
+
+void NunchuckMouse::handleSelectionMode() {
+    int yDirection = getDirectionY();
+
+    if (yDirection == -1) {
+        isFreehandMode = true;
+    } else if (yDirection == 1) {
+        isKeyboardMode = true;
+    }
+}
+
+bool NunchuckMouse::selectionModeActivated() {
+    return pitchAngleInRange(60, 115) && mode != FREEHAND;
 }
