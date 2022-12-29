@@ -20,15 +20,15 @@ void MouseController::handle() {
         Mouse.move(xMovement, yMovement);
     }
 
-    if (nunchuck->getCurrentInput().buttonZ) {
+    if (nunchuck->buttonZPressed()) {
         Mouse.press();
-    } else {
+    } else if (nunchuck->buttonZReleased()) {
         Mouse.release();
     }
 
-    if (nunchuck->getCurrentInput().buttonC) {
+    if (nunchuck->buttonCPressed()) {
         Mouse.press(MOUSE_RIGHT);
-    } else {
+    } else if (nunchuck->buttonCReleased()) {
         Mouse.release(MOUSE_RIGHT);
     }
 }

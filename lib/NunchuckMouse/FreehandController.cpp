@@ -13,7 +13,7 @@ void FreehandController::handle() {
 //    auto xMovement = static_cast<int8_t>(getPrecision(currInput.rollAngle));
 //    auto yMovement = static_cast<int8_t>(-1 * getPrecision(currInput.pitchAngle));
 
-    if (nunchuck->getCurrentInput().buttonC) {
+    if (nunchuck->buttonCPressed()) {
         setActive(false);
     }
     // TODO: Disabling movement in freehand mode until the algorithm is refined. Using roll and pitch angle is unwieldy.

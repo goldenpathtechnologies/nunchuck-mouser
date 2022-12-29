@@ -95,6 +95,10 @@ void NunchuckController::updateDirectionalState() {
     currDirectionalState = getDigitalDirection();
 }
 
+bool NunchuckController::directionalStateChanged() const {
+    return prevDirectionalState != currDirectionalState;
+}
+
 int NunchuckController::getDigitalDirection() const {
     int direction = NONE;
 
@@ -115,6 +119,30 @@ int NunchuckController::getDigitalDirection() const {
 
 bool NunchuckController::isActiveDirection(int direction) const {
     return (getDigitalDirection() & direction) == direction;
+}
+
+bool NunchuckController::directionPressed(int direction) const {
+    return isActiveDirection(direction) && directionalStateChanged();
+}
+
+bool NunchuckController::directionReleased(int direction) const {
+    return !isActiveDirection(direction) && directionalStateChanged();
+}
+
+bool NunchuckController::buttonZPressed() {
+    return getCurrentInput().buttonZ && !getPreviousInput().buttonZ;
+}
+
+bool NunchuckController::buttonZReleased() {
+    return !getCurrentInput().buttonZ && getPreviousInput().buttonZ;
+}
+
+bool NunchuckController::buttonCPressed() {
+    return getCurrentInput().buttonC && !getPreviousInput().buttonC;
+}
+
+bool NunchuckController::buttonCReleased() {
+    return !getCurrentInput().buttonC && getPreviousInput().buttonC;
 }
 
 NunchuckInput NunchuckController::getCurrentInput() {

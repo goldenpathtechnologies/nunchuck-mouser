@@ -47,8 +47,15 @@ public:
     bool isTiltedUp() const;
     bool isTiltedDown() const;
     void updateDirectionalState();
+    bool directionalStateChanged() const;
     int getDigitalDirection() const;
     bool isActiveDirection(int direction) const;
+    bool directionPressed(int direction) const;
+    bool directionReleased(int direction) const;
+    bool buttonZPressed();
+    bool buttonZReleased();
+    bool buttonCPressed();
+    bool buttonCReleased();
     NunchuckInput getCurrentInput();
     NunchuckInput getPreviousInput();
     void updateInput(NunchuckInput *input);

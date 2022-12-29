@@ -41,57 +41,53 @@ void KeyboardController::handleKeyboardTypingMode() {
 }
 
 void KeyboardController::handleKeyboardNavigatingMode() {
-    if (nunchuck->getDirectionX() > 0) {
+    if (nunchuck->directionPressed(RIGHT)) {
         Keyboard.press(KEY_RIGHT_ARROW);
-    } else {
+    } else if (nunchuck->directionReleased(RIGHT)) {
         Keyboard.release(KEY_RIGHT_ARROW);
     }
 
-    if (nunchuck->getDirectionX() < 0) {
+    if (nunchuck->directionPressed(LEFT)) {
         Keyboard.press(KEY_LEFT_ARROW);
-    } else {
+    } else if (nunchuck->directionReleased(LEFT)) {
         Keyboard.release(KEY_LEFT_ARROW);
     }
 
-    if (nunchuck->getDirectionY() < 0) {
+    if (nunchuck->directionPressed(UP)) {
         Keyboard.press(KEY_UP_ARROW);
-    } else {
+    } else if (nunchuck->directionReleased(UP)) {
         Keyboard.release(KEY_UP_ARROW);
     }
 
-    if (nunchuck->getDirectionY() > 0) {
+    if (nunchuck->directionPressed(DOWN)) {
         Keyboard.press(KEY_DOWN_ARROW);
-    } else {
+    } else if (nunchuck->directionReleased(DOWN)) {
         Keyboard.release(KEY_DOWN_ARROW);
     }
 
-    if (nunchuck->getCurrentInput().buttonZ && !nunchuck->getCurrentInput().buttonC) {
+    if (nunchuck->buttonZPressed() && !nunchuck->getCurrentInput().buttonC) {
         Keyboard.press(KEY_ENTER);
-    } else {
+    } else if (nunchuck->buttonZReleased()) {
         Keyboard.release(KEY_ENTER);
     }
 
-    if (nunchuck->getCurrentInput().buttonC && !nunchuck->getCurrentInput().buttonZ) {
+    if (nunchuck->buttonCPressed() && !nunchuck->getCurrentInput().buttonZ) {
         Keyboard.press(KEY_BACKSPACE);
-    } else {
+    } else if (nunchuck->buttonCReleased()) {
         Keyboard.release(KEY_BACKSPACE);
     }
 }
 
 void KeyboardController::handleKeyboardQuickKeysMode() {
-    if (nunchuck->getCurrentInput().buttonZ) {
+    if (nunchuck->buttonZPressed()) {
         Keyboard.press(KEY_SPACE);
-    } else {
+    } else if (nunchuck->buttonZReleased()) {
         Keyboard.release(KEY_SPACE);
     }
 
-    if (nunchuck->isActiveDirection(UP)) {
-        // TODO: The problem here is that the nunchuck is calling Keyboard.press() several times. We only want to do this
-        //  once when the state changes, and release when the state changes again. I'll have to track the state of the
-        //  digital directional buttons to accomplish all of the above. Additionally, I'll have to fix all the other
-        //  modes to only press buttons when state changes.
+    if (nunchuck->directionPressed(UP)) {
         Keyboard.press(KEY_PERIOD);
-    } else {
+    } else if (nunchuck->directionReleased(UP)) {
         Keyboard.release(KEY_PERIOD);
     }
 
@@ -159,13 +155,13 @@ void KeyboardController::handleKeyboardQuickKeysMode() {
 }
 
 void KeyboardController::handleKeyboardExitMode() {
-    if (nunchuck->getCurrentInput().buttonZ && !nunchuck->getCurrentInput().buttonC) {
+    if (nunchuck->buttonZPressed() && !nunchuck->getCurrentInput().buttonC) {
         setActive(false);
     }
 
-    if (nunchuck->getCurrentInput().buttonC && !nunchuck->getCurrentInput().buttonZ) {
+    if (nunchuck->buttonCPressed() && !nunchuck->getCurrentInput().buttonZ) {
         Keyboard.press(KEY_ESC);
-    } else {
+    } else if (nunchuck->buttonCReleased()) {
         Keyboard.release(KEY_ESC);
     }
 }

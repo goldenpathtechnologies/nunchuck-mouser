@@ -32,9 +32,9 @@ void ScrollController::handle() {
         scrollDelay = 0;
     }
 
-    if (nunchuck->getCurrentInput().buttonC) {
+    if (nunchuck->buttonCPressed()) {
         Mouse.press(MOUSE_MIDDLE);
-    } else {
+    } else if (nunchuck->buttonCReleased()) {
         Mouse.release(MOUSE_MIDDLE);
     }
 }

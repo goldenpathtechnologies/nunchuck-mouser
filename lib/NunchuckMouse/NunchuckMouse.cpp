@@ -43,12 +43,14 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
 }
 
 void NunchuckMouse::updateMode() {
-    if (selector->isActive()) {
-        nunchuck->setMode(SELECTION);
-    } else if (freehandMouse->isActive()) {
+    if (freehandMouse->isActive()) {
         nunchuck->setMode(FREEHAND);
     } else if (keyboard->isActive()) {
         nunchuck->setMode(KEYBOARD);
+    } else if (selector->isActive()) {
+        // Note: All modes that SELECTION switches to must be checked before this, or SELECTION mode will
+        //  remain active until manually deactivated.
+        nunchuck->setMode(SELECTION);
     } else if (scroller->isActive()) {
         nunchuck->setMode(SCROLL);
     } else {

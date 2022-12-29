@@ -17,16 +17,15 @@ SelectionController::SelectionController(
 }
 
 void SelectionController::handle() {
-    // TODO: Use digital method to get direction here.
-    int yDirection = nunchuck->getDirectionY();
-
-    if (yDirection == -1) {
+    if (nunchuck->directionPressed(UP)) {
         freehandMouse->setActive(true);
-    } else if (yDirection == 1) {
+    } else if (nunchuck->directionPressed(DOWN)) {
         keyboard->setActive(true);
     }
 }
 
 bool SelectionController::isActive() {
-    return nunchuck->pitchAngleInRange(60, 115) && nunchuck->getMode() != FREEHAND;
+    return nunchuck->pitchAngleInRange(60, 115)
+    && nunchuck->getMode() != FREEHAND
+    && nunchuck->getMode() != KEYBOARD;
 }
