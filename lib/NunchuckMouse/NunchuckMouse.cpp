@@ -5,6 +5,8 @@
 #include <NunchuckMouse.h>
 #include <Arduino.h>
 
+NunchuckMouse::NunchuckMouse() = default;
+
 void NunchuckMouse::processInputs(NunchuckInput *input) {
     prevInput = currInput;
     currInput = *input;
@@ -21,6 +23,9 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
         case FREEHAND:
             handleFreehandMode();
             break;
+        case KEYBOARD:
+            handleKeyboardMode();
+            break;
         case SCROLL:
             handleScrollMode();
             break;
@@ -29,7 +34,19 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
     }
 }
 
-NunchuckMouse::NunchuckMouse() = default;
+void NunchuckMouse::updateMode() {
+    if (selectionModeActivated()) {
+        mode = SELECTION;
+    } else if (isFreehandMode) {
+        mode = FREEHAND;
+    } else if (isKeyboardMode) {
+        mode = KEYBOARD;
+    } else if (scrollModeActivated()) {
+        mode = SCROLL;
+    } else {
+        mode = MOUSE;
+    }
+}
 
 void NunchuckMouse::begin() { // NOLINT(readability-convert-member-functions-to-static)
     Keyboard.begin();
@@ -101,6 +118,9 @@ void NunchuckMouse::printInputs(Stream &stream) {
         case FREEHAND:
             stream.print("FREEHAND");
             break;
+        case KEYBOARD:
+            stream.print("KEYBOARD");
+            break;
         case SELECTION:
             stream.print("SELECTION");
             break;
@@ -108,18 +128,6 @@ void NunchuckMouse::printInputs(Stream &stream) {
             stream.print("MOUSE");
     }
     stream.println();
-}
-
-void NunchuckMouse::updateMode() {
-    if (selectionModeActivated()) {
-        mode = SELECTION;
-    } else if (isFreehandMode) {
-        mode = FREEHAND;
-    } else if (scrollModeActivated()) {
-        mode = SCROLL;
-    } else {
-        mode = MOUSE;
-    }
 }
 
 bool NunchuckMouse::rollAngleInRange(float a0, float a1) const {
@@ -140,9 +148,20 @@ bool NunchuckMouse::angleInRange(float value, float a0, float a1) {
     }
 }
 
+bool NunchuckMouse::isSideTilted() {
+    return (rollAngleInRange(40, 120) || rollAngleInRange(-120, -40)) && pitchAngleInRange(-35, 35);
+}
+
+bool NunchuckMouse::isTiltedUp() {
+    return pitchAngleInRange(35, 90);
+}
+
+bool NunchuckMouse::isTiltedDown() {
+    return pitchAngleInRange(-90, -35);
+}
+
 bool NunchuckMouse::scrollModeActivated() {
-    return (rollAngleInRange(40, 120) || rollAngleInRange(-120, -40))
-        && pitchAngleInRange(-35, 35) && mode != FREEHAND;
+    return isSideTilted() && (mode == MOUSE || mode == SCROLL);
 }
 
 void NunchuckMouse::handleMouseMode() {
@@ -276,4 +295,197 @@ void NunchuckMouse::handleSelectionMode() {
 
 bool NunchuckMouse::selectionModeActivated() {
     return pitchAngleInRange(60, 115) && mode != FREEHAND;
+}
+
+void NunchuckMouse::handleKeyboardMode() {
+    updateKeyboardMode();
+    updateDirectionalState();
+
+    switch(keyboardMode) {
+        case NAVIGATING:
+            handleKeyboardNavigatingMode();
+            break;
+        case QUICK_KEYS:
+            handleKeyboardQuickKeysMode();
+            break;
+        case EXIT:
+            handleKeyboardExitMode();
+            break;
+        default:
+            handleKeyboardTypingMode();
+    }
+}
+
+void NunchuckMouse::updateKeyboardMode() {
+    if (isSideTilted()) {
+        keyboardMode = NAVIGATING;
+    } else if (isTiltedUp()) {
+        keyboardMode = QUICK_KEYS;
+    } else if (isTiltedDown()) {
+        keyboardMode = EXIT;
+    } else {
+        keyboardMode = TYPING;
+    }
+}
+
+void NunchuckMouse::handleKeyboardTypingMode() {
+
+}
+
+void NunchuckMouse::handleKeyboardNavigatingMode() {
+    if (getDirectionX() > 0) {
+        Keyboard.press(KEY_RIGHT_ARROW);
+    } else {
+        Keyboard.release(KEY_RIGHT_ARROW);
+    }
+
+    if (getDirectionX() < 0) {
+        Keyboard.press(KEY_LEFT_ARROW);
+    } else {
+        Keyboard.release(KEY_LEFT_ARROW);
+    }
+
+    if (getDirectionY() < 0) {
+        Keyboard.press(KEY_UP_ARROW);
+    } else {
+        Keyboard.release(KEY_UP_ARROW);
+    }
+
+    if (getDirectionY() > 0) {
+        Keyboard.press(KEY_DOWN_ARROW);
+    } else {
+        Keyboard.release(KEY_DOWN_ARROW);
+    }
+
+    if (currInput.buttonZ && !currInput.buttonC) {
+        Keyboard.press(KEY_ENTER);
+    } else {
+        Keyboard.release(KEY_ENTER);
+    }
+
+    if (currInput.buttonC && !currInput.buttonZ) {
+        Keyboard.press(KEY_BACKSPACE);
+    } else {
+        Keyboard.release(KEY_BACKSPACE);
+    }
+}
+
+void NunchuckMouse::handleKeyboardQuickKeysMode() {
+    if (currInput.buttonZ) {
+        Keyboard.press(KEY_SPACE);
+    } else {
+        Keyboard.release(KEY_SPACE);
+    }
+
+    if (isActiveDirection(UP)) {
+        // TODO: The problem here is that the nunchuck is calling Keyboard.press() several times. We only want to do this
+        //  once when the state changes, and release when the state changes again. I'll have to track the state of the
+        //  digital directional buttons to accomplish all of the above. Additionally, I'll have to fix all the other
+        //  modes to only press buttons when state changes.
+        Keyboard.press(KEY_PERIOD);
+    } else {
+        Keyboard.release(KEY_PERIOD);
+    }
+
+//    if (currInput.buttonC) {
+//        if (directionUp) {
+//            Keyboard.press(KEY_MINUS);
+//        } else {
+//            Keyboard.release(KEY_MINUS);
+//        }
+//
+//        if (directionDown) {
+//            // Question mark `?`
+//            Keyboard.press(MODIFIERKEY_LEFT_SHIFT);
+//            Keyboard.press(KEY_SLASH);
+//        } else {
+//            Keyboard.release(MODIFIERKEY_LEFT_SHIFT);
+//            Keyboard.release(KEY_SLASH);
+//        }
+//
+//        if (directionRight) {
+//            // At symbol `@`
+//            Keyboard.press(MODIFIERKEY_RIGHT_SHIFT);
+//            Keyboard.press(KEY_2);
+//        } else {
+//            Keyboard.release(MODIFIERKEY_RIGHT_SHIFT);
+//            Keyboard.release(KEY_2);
+//        }
+//
+//        if (directionLeft) {
+//            // Hash symbol `#`
+//            Keyboard.press(MODIFIERKEY_RIGHT_SHIFT);
+//            Keyboard.press(KEY_3);
+//        } else {
+//            Keyboard.release(MODIFIERKEY_RIGHT_SHIFT);
+//            Keyboard.release(KEY_3);
+//        }
+//    } else {
+//        if (directionUp) {
+//            Keyboard.press(KEY_PERIOD);
+//        } else {
+//            Keyboard.release(KEY_PERIOD);
+//        }
+//
+//        if (directionDown) {
+//            Keyboard.press(KEY_COMMA);
+//        } else {
+//            Keyboard.release(KEY_COMMA);
+//        }
+//
+//        if (directionRight) {
+//            Keyboard.press(KEY_QUOTE);
+//        } else {
+//            Keyboard.release(KEY_QUOTE);
+//        }
+//
+//        if (directionLeft) {
+//            // Double quotes `"`
+//            Keyboard.press(MODIFIERKEY_LEFT_SHIFT);
+//            Keyboard.press(KEY_QUOTE);
+//        } else {
+//            Keyboard.release(MODIFIERKEY_LEFT_SHIFT);
+//            Keyboard.release(KEY_QUOTE);
+//        }
+//    }
+}
+
+void NunchuckMouse::handleKeyboardExitMode() {
+    if (currInput.buttonZ && !currInput.buttonC) {
+        isKeyboardMode = false;
+    }
+
+    if (currInput.buttonC && !currInput.buttonZ) {
+        Keyboard.press(KEY_ESC);
+    } else {
+        Keyboard.release(KEY_ESC);
+    }
+}
+
+int NunchuckMouse::getDigitalDirection() {
+    int direction = NONE;
+
+    if (getAnalogPercentX() > 95) {
+        direction |= RIGHT;
+    } else if (getAnalogPercentX() < -95) {
+        direction |= LEFT;
+    }
+
+    if (getAnalogPercentY() > 95) {
+        direction |= UP;
+    } else if (getAnalogPercentY() < -95) {
+        direction |= DOWN;
+    }
+
+    return direction;
+}
+
+bool NunchuckMouse::isActiveDirection(int direction) {
+    return (getDigitalDirection() & direction) == direction;
+}
+
+void NunchuckMouse::updateDirectionalState() {
+    prevDirectionalState = currDirectionalState;
+
+    currDirectionalState = getDigitalDirection();
 }
