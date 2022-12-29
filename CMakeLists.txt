@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} lib/NunchuckMouse/NunchuckMouse.h lib/NunchuckMouse/NunchuckMouse.cpp lib/NunchuckMouse/Constants.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} lib/NunchuckMouse/NunchuckMouse.h lib/NunchuckMouse/NunchuckMouse.cpp lib/NunchuckMouse/Constants.h lib/NunchuckMouse/NunchuckController.h lib/NunchuckMouse/MouseController.h lib/NunchuckMouse/ScrollController.h lib/NunchuckMouse/SelectionController.h lib/NunchuckMouse/FreehandController.h lib/NunchuckMouse/KeyboardController.h lib/NunchuckMouse/NunchuckController.cpp lib/NunchuckMouse/MouseController.cpp lib/NunchuckMouse/ScrollController.cpp lib/NunchuckMouse/FreehandController.cpp lib/NunchuckMouse/SelectionController.cpp lib/NunchuckMouse/KeyboardController.cpp)
