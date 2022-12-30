@@ -85,73 +85,67 @@ void KeyboardController::handleKeyboardQuickKeysMode() {
         Keyboard.release(KEY_SPACE);
     }
 
-    if (nunchuck->directionPressed(UP)) {
-        Keyboard.press(KEY_PERIOD);
-    } else if (nunchuck->directionReleased(UP)) {
-        Keyboard.release(KEY_PERIOD);
-    }
+    if (nunchuck->getCurrentInput().buttonC) {
+        if (nunchuck->directionPressed(UP)) {
+            Keyboard.press(KEY_MINUS);
+        } else if (nunchuck->directionReleased(UP)) {
+            Keyboard.release(KEY_MINUS);
+        }
 
-//    if (currInput.buttonC) {
-//        if (directionUp) {
-//            Keyboard.press(KEY_MINUS);
-//        } else {
-//            Keyboard.release(KEY_MINUS);
-//        }
-//
-//        if (directionDown) {
-//            // Question mark `?`
-//            Keyboard.press(MODIFIERKEY_LEFT_SHIFT);
-//            Keyboard.press(KEY_SLASH);
-//        } else {
-//            Keyboard.release(MODIFIERKEY_LEFT_SHIFT);
-//            Keyboard.release(KEY_SLASH);
-//        }
-//
-//        if (directionRight) {
-//            // At symbol `@`
-//            Keyboard.press(MODIFIERKEY_RIGHT_SHIFT);
-//            Keyboard.press(KEY_2);
-//        } else {
-//            Keyboard.release(MODIFIERKEY_RIGHT_SHIFT);
-//            Keyboard.release(KEY_2);
-//        }
-//
-//        if (directionLeft) {
-//            // Hash symbol `#`
-//            Keyboard.press(MODIFIERKEY_RIGHT_SHIFT);
-//            Keyboard.press(KEY_3);
-//        } else {
-//            Keyboard.release(MODIFIERKEY_RIGHT_SHIFT);
-//            Keyboard.release(KEY_3);
-//        }
-//    } else {
-//        if (directionUp) {
-//            Keyboard.press(KEY_PERIOD);
-//        } else {
-//            Keyboard.release(KEY_PERIOD);
-//        }
-//
-//        if (directionDown) {
-//            Keyboard.press(KEY_COMMA);
-//        } else {
-//            Keyboard.release(KEY_COMMA);
-//        }
-//
-//        if (directionRight) {
-//            Keyboard.press(KEY_QUOTE);
-//        } else {
-//            Keyboard.release(KEY_QUOTE);
-//        }
-//
-//        if (directionLeft) {
-//            // Double quotes `"`
-//            Keyboard.press(MODIFIERKEY_LEFT_SHIFT);
-//            Keyboard.press(KEY_QUOTE);
-//        } else {
-//            Keyboard.release(MODIFIERKEY_LEFT_SHIFT);
-//            Keyboard.release(KEY_QUOTE);
-//        }
-//    }
+        if (nunchuck->directionPressed(DOWN)) {
+            // Question mark `?`
+            Keyboard.press(MODIFIERKEY_LEFT_SHIFT);
+            Keyboard.press(KEY_SLASH);
+        } else if (nunchuck->directionReleased(DOWN)) {
+            Keyboard.release(KEY_SLASH);
+            Keyboard.release(MODIFIERKEY_LEFT_SHIFT);
+        }
+
+        if (nunchuck->directionPressed(RIGHT)) {
+            // At symbol `@`
+            Keyboard.press(MODIFIERKEY_RIGHT_SHIFT);
+            Keyboard.press(KEY_2);
+        } else if (nunchuck->directionReleased(RIGHT)) {
+            Keyboard.release(KEY_2);
+            Keyboard.release(MODIFIERKEY_RIGHT_SHIFT);
+        }
+
+        if (nunchuck->directionPressed(LEFT)) {
+            // Hash symbol `#`
+            Keyboard.press(MODIFIERKEY_RIGHT_SHIFT);
+            Keyboard.press(KEY_3);
+        } else if (nunchuck->directionReleased(LEFT)) {
+            Keyboard.release(KEY_3);
+            Keyboard.release(MODIFIERKEY_RIGHT_SHIFT);
+        }
+    } else {
+        if (nunchuck->directionPressed(UP)) {
+            Keyboard.press(KEY_PERIOD);
+        } else if (nunchuck->directionReleased(UP)) {
+            Keyboard.release(KEY_PERIOD);
+        }
+
+        if (nunchuck->directionPressed(DOWN)) {
+            Keyboard.press(KEY_COMMA);
+        } else if (nunchuck->directionReleased(DOWN)) {
+            Keyboard.release(KEY_COMMA);
+        }
+
+        if (nunchuck->directionPressed(RIGHT)) {
+            Keyboard.press(KEY_QUOTE);
+        } else if (nunchuck->directionReleased(RIGHT)) {
+            Keyboard.release(KEY_QUOTE);
+        }
+
+        if (nunchuck->directionPressed(LEFT)) {
+            // Double quotes `"`
+            Keyboard.press(MODIFIERKEY_LEFT_SHIFT);
+            Keyboard.press(KEY_QUOTE);
+        } else if (nunchuck->directionReleased(LEFT)) {
+            Keyboard.release(KEY_QUOTE);
+            Keyboard.release(MODIFIERKEY_LEFT_SHIFT);
+        }
+    }
 }
 
 void KeyboardController::handleKeyboardExitMode() {
