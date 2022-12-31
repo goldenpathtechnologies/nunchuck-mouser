@@ -12,22 +12,24 @@ public:
     explicit KeyboardController(NunchuckController *device);
 
     void handle();
-    void updateKeyboardMode();
-    void handleKeyboardTypingMode();
-    void handleKeyboardNavigatingMode();
-    void handleKeyboardQuickKeysMode();
-    void handleKeyboardExitMode();
     void setActive(bool isActive);
     bool isActive() const;
 private:
     enum KeyboardMode {
-        TYPING,
-        NAVIGATING,
-        QUICK_KEYS,
+        NAVIGATION,
+        NAVIGATION_PLUS,
+        MEDIA,
         EXIT
     };
     NunchuckController *nunchuck;
     bool isActivated = false;
-    KeyboardMode keyboardMode = TYPING;
+    KeyboardMode keyboardMode = NAVIGATION;
+    void updateKeyboardMode();
+    void handleNavigationMode();
+    void handleNavigationPlusMode();
+    void handleMediaMode();
+    void handleExitMode();
+    void handleDirectionalButtonPress(DirectionalButtons direction, int key);
+    void handleCZButtonPress(NunchuckButtons button, int key, bool noButtonRollover = false);
 };
 #endif //NUNCHUCK_MOUSER_KEYBOARDCONTROLLER_H

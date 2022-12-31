@@ -26,6 +26,7 @@ void SelectionController::handle() {
 
 bool SelectionController::isActive() {
     return nunchuck->pitchAngleInRange(60, 115)
+    && nunchuck->rollAngleInRange(-60, 60)
     && nunchuck->getMode() != FREEHAND
     && nunchuck->getMode() != KEYBOARD;
 }

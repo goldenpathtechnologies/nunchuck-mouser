@@ -33,6 +33,11 @@ enum DirectionalButtons {
     RIGHT = 0x1000
 };
 
+enum NunchuckButtons {
+    C_BUTTON,
+    Z_BUTTON
+};
+
 class NunchuckController {
 public:
     int getDirectionX() const;
