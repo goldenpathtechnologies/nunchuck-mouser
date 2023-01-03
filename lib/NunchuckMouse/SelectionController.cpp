@@ -3,23 +3,24 @@
 // Copyright (c) 2022 Golden Path Technologies Inc. MIT Licence.
 //
 
+#include <Arduino.h>
 #include "SelectionController.h"
-#include "FreehandController.h"
+#include "JoystickController.h"
 #include "KeyboardController.h"
 
 SelectionController::SelectionController(
         NunchuckController *device,
-        FreehandController *freehandController,
+        JoystickController *joystickController,
         KeyboardController *keyboardController) {
     nunchuck = device;
-    freehandMouse = freehandController;
+    joystick = joystickController;
     keyboard = keyboardController;
 }
 
 void SelectionController::handle() {
-    if (nunchuck->directionPressed(UP)) {
-        freehandMouse->setActive(true);
-    } else if (nunchuck->directionPressed(DOWN)) {
+    if (nunchuck->directionPressed(DOWN)) {
+        joystick->setActive(true);
+    } else if (nunchuck->directionPressed(UP)) {
         keyboard->setActive(true);
     }
 }
@@ -27,6 +28,6 @@ void SelectionController::handle() {
 bool SelectionController::isActive() {
     return nunchuck->pitchAngleInRange(60, 115)
     && nunchuck->rollAngleInRange(-60, 60)
-    && nunchuck->getMode() != FREEHAND
+    && nunchuck->getMode() != JOYSTICK
     && nunchuck->getMode() != KEYBOARD;
 }

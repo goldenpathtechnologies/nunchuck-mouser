@@ -10,9 +10,9 @@ NunchuckMouse::NunchuckMouse() {
     nunchuck = new NunchuckController();
     mouse = new MouseController(nunchuck);
     scroller = new ScrollController(nunchuck);
-    freehandMouse = new FreehandController(nunchuck);
+    joystick = new JoystickController(nunchuck);
     keyboard = new KeyboardController(nunchuck);
-    selector = new SelectionController(nunchuck, freehandMouse, keyboard);
+    selector = new SelectionController(nunchuck, joystick, keyboard);
 };
 
 void NunchuckMouse::processInputs(NunchuckInput *input) {
@@ -28,8 +28,8 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
         case SELECTION:
             selector->handle();
             break;
-        case FREEHAND:
-            freehandMouse->handle();
+        case JOYSTICK:
+            joystick->handle();
             break;
         case KEYBOARD:
             keyboard->handle();
@@ -43,8 +43,8 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
 }
 
 void NunchuckMouse::updateMode() {
-    if (freehandMouse->isActive()) {
-        nunchuck->setMode(FREEHAND);
+    if (joystick->isActive()) {
+        nunchuck->setMode(JOYSTICK);
     } else if (keyboard->isActive()) {
         nunchuck->setMode(KEYBOARD);
     } else if (selector->isActive()) {
@@ -77,8 +77,8 @@ void NunchuckMouse::printInputs(Stream &stream) {
         case SCROLL:
             stream.print("SCROLL");
             break;
-        case FREEHAND:
-            stream.print("FREEHAND");
+        case JOYSTICK:
+            stream.print("JOYSTICK");
             break;
         case KEYBOARD:
             stream.print("KEYBOARD");

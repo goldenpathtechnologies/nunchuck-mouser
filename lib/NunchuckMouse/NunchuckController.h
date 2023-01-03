@@ -21,7 +21,7 @@ enum NunchuckMode {
     MOUSE,
     SCROLL,
     SELECTION,
-    FREEHAND,
+    JOYSTICK,
     KEYBOARD
 };
 

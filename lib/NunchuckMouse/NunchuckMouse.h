@@ -12,7 +12,7 @@
 #include "MouseController.h"
 #include "ScrollController.h"
 #include "SelectionController.h"
-#include "FreehandController.h"
+#include "JoystickController.h"
 #include "KeyboardController.h"
 
 class NunchuckMouse {
@@ -27,7 +27,7 @@ private:
     MouseController *mouse;
     ScrollController *scroller;
     SelectionController *selector;
-    FreehandController *freehandMouse;
+    JoystickController *joystick;
     KeyboardController *keyboard;
     void updateMode();
 };

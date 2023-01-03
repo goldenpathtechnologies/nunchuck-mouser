@@ -20,4 +20,8 @@ const int RANGE_POS_X = MAX_X - LIVE_POS_X;
 const int RANGE_NEG_X = LIVE_NEG_X - MIN_X;
 const int RANGE_POS_Y = MAX_Y - LIVE_POS_Y;
 const int RANGE_NEG_Y = LIVE_NEG_Y - MIN_Y;
+const int ACCEL_REST_CENTER = 525;
+const int ACCEL_REST_MIN = 315;
+const int ACCEL_REST_MAX = 725;
+const int ACCEL_REST_RANGE = ACCEL_REST_MAX - ACCEL_REST_MIN;
 #endif //NUNCHUCK_MOUSER_CONSTANTS_H
