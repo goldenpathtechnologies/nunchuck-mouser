@@ -6,11 +6,14 @@
 #include <Arduino.h>
 #include "MouseController.h"
 
-MouseController::MouseController(NunchuckController *device) {
+MouseController::MouseController(NunchuckController *device, KeyboardController *keyboardController) {
     nunchuck = device;
+    keyboard = keyboardController;
 }
 
 void MouseController::handle() {
+    if (handleSwitchToKeyboardMode()) return;
+
     auto xMovement = static_cast<int8_t>(
             nunchuck->getDirectionX() * getPrecision(nunchuck->getAnalogPercentX()));
     auto yMovement = static_cast<int8_t>(
@@ -51,4 +54,13 @@ int MouseController::getPrecision(float analogPercentage) {
     } else {
         return 7;
     }
+}
+
+bool MouseController::handleSwitchToKeyboardMode() {
+    if (nunchuck->isTiltedDown() && nunchuck->buttonCPressed()) {
+        keyboard->setActive(true);
+        return true;
+    }
+
+    return false;
 }

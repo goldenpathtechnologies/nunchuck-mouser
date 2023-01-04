@@ -11,8 +11,6 @@
 #include "NunchuckController.h"
 #include "MouseController.h"
 #include "ScrollController.h"
-#include "SelectionController.h"
-#include "JoystickController.h"
 #include "KeyboardController.h"
 
 class NunchuckMouse {
@@ -26,8 +24,6 @@ private:
     NunchuckController *nunchuck;
     MouseController *mouse;
     ScrollController *scroller;
-    SelectionController *selector;
-    JoystickController *joystick;
     KeyboardController *keyboard;
     void updateMode();
 };

@@ -20,8 +20,6 @@ struct NunchuckInput {
 enum NunchuckMode {
     MOUSE,
     SCROLL,
-    SELECTION,
-    JOYSTICK,
     KEYBOARD
 };
 
@@ -54,7 +52,6 @@ public:
     void updateDirectionalState();
     bool directionalStateChanged() const;
     int getDigitalDirection() const;
-    int getDigitalDirection(float analogThreshold) const;
     bool isActiveDirection(int direction) const;
     bool directionPressed(int direction) const;
     bool directionReleased(int direction) const;
@@ -73,5 +70,6 @@ private:
     NunchuckMode mode = MOUSE;
     int prevDirectionalState = NONE;
     int currDirectionalState = NONE;
+    const float ANALOG_THRESHOLD = 60;
 };
 #endif //NUNCHUCK_MOUSER_NUNCHUCKCONTROLLER_H

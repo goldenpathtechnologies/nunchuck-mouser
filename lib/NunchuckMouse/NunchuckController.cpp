@@ -100,21 +100,17 @@ bool NunchuckController::directionalStateChanged() const {
 }
 
 int NunchuckController::getDigitalDirection() const {
-    return getDigitalDirection(95);
-}
-
-int NunchuckController::getDigitalDirection(float analogThreshold) const {
     int direction = NONE;
 
-    if (getAnalogPercentX() > analogThreshold) {
+    if (getAnalogPercentX() > ANALOG_THRESHOLD) {
         direction += RIGHT;
-    } else if (getAnalogPercentX() < -analogThreshold) {
+    } else if (getAnalogPercentX() < -ANALOG_THRESHOLD) {
         direction += LEFT;
     }
 
-    if (getAnalogPercentY() > analogThreshold) {
+    if (getAnalogPercentY() > ANALOG_THRESHOLD) {
         direction += UP;
-    } else if (getAnalogPercentY() < -analogThreshold) {
+    } else if (getAnalogPercentY() < -ANALOG_THRESHOLD) {
         direction += DOWN;
     }
 

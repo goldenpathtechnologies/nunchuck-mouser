@@ -8,11 +8,9 @@
 
 NunchuckMouse::NunchuckMouse() {
     nunchuck = new NunchuckController();
-    mouse = new MouseController(nunchuck);
     scroller = new ScrollController(nunchuck);
-    joystick = new JoystickController(nunchuck);
     keyboard = new KeyboardController(nunchuck);
-    selector = new SelectionController(nunchuck, joystick, keyboard);
+    mouse = new MouseController(nunchuck, keyboard);
 };
 
 void NunchuckMouse::processInputs(NunchuckInput *input) {
@@ -25,12 +23,6 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
     updateMode();
 
     switch (nunchuck->getMode()) {
-        case SELECTION:
-            selector->handle();
-            break;
-        case JOYSTICK:
-            joystick->handle();
-            break;
         case KEYBOARD:
             keyboard->handle();
             break;
@@ -43,14 +35,8 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
 }
 
 void NunchuckMouse::updateMode() {
-    if (joystick->isActive()) {
-        nunchuck->setMode(JOYSTICK);
-    } else if (keyboard->isActive()) {
+    if (keyboard->isActive()) {
         nunchuck->setMode(KEYBOARD);
-    } else if (selector->isActive()) {
-        // Note: All modes that SELECTION switches to must be checked before this, or SELECTION mode will
-        //  remain active until manually deactivated.
-        nunchuck->setMode(SELECTION);
     } else if (scroller->isActive()) {
         nunchuck->setMode(SCROLL);
     } else {
@@ -77,14 +63,8 @@ void NunchuckMouse::printInputs(Stream &stream) {
         case SCROLL:
             stream.print("SCROLL");
             break;
-        case JOYSTICK:
-            stream.print("JOYSTICK");
-            break;
         case KEYBOARD:
             stream.print("KEYBOARD");
-            break;
-        case SELECTION:
-            stream.print("SELECTION");
             break;
         default:
             stream.print("MOUSE");
