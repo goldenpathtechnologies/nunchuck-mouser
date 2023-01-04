@@ -7,11 +7,11 @@
 #define NUNCHUCK_MOUSER_CONSTANTS_H
 const int DEAD_ZONE_LENGTH = 20;
 const int CENTER_X = 127;
-const int CENTER_Y = 129;
+const int CENTER_Y = 128;
 const int MIN_X = 25;
-const int MIN_Y = 34;
+const int MIN_Y = 31;
 const int MAX_X = 228;
-const int MAX_Y = 226;
+const int MAX_Y = 229;
 const int LIVE_POS_X = CENTER_X + DEAD_ZONE_LENGTH;
 const int LIVE_NEG_X = CENTER_X - DEAD_ZONE_LENGTH;
 const int LIVE_POS_Y = CENTER_Y + DEAD_ZONE_LENGTH;

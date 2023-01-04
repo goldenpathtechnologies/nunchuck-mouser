@@ -54,6 +54,7 @@ public:
     void updateDirectionalState();
     bool directionalStateChanged() const;
     int getDigitalDirection() const;
+    int getDigitalDirection(float analogThreshold) const;
     bool isActiveDirection(int direction) const;
     bool directionPressed(int direction) const;
     bool directionReleased(int direction) const;

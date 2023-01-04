@@ -47,6 +47,8 @@ private:
     static void handleButtonPress(bool isPressed, bool isReleased, uint8_t joyButton);
     uint16_t getAnalogValueX();
     uint16_t getAnalogValueY();
+    static uint16_t getAnalogValue(int analog, int center, bool inverted = false);
     void handlePOVHat();
+    static void resetAllInputs();
 };
 #endif //NUNCHUCK_MOUSER_JOYSTICKCONTROLLER_H

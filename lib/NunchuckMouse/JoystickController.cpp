@@ -9,6 +9,8 @@
 
 JoystickController::JoystickController(NunchuckController *device) {
     nunchuck = device;
+
+    resetAllInputs();
 }
 
 void JoystickController::handle() {
@@ -38,17 +40,15 @@ bool JoystickController::isActive() const {
 }
 
 void JoystickController::setActive(bool isActive) {
-    // TODO: Reset all joystick buttons to default values to prevent buttons from sticking when
-    //  exiting joystick mode.
     isActivated = isActive;
+
+    resetAllInputs();
 }
 
 void JoystickController::handleAnalogMode() {
     handleCZButtonPress(Z_BUTTON, B_BUTTON);
     handleCZButtonPress(C_BUTTON, A_BUTTON);
 
-    // TODO: Analog is not working at all as expected, mainly sticking to one corner and moving
-    //  randomly.
     Joystick.X(getAnalogValueX());
     Joystick.Y(getAnalogValueY());
 }
@@ -57,8 +57,6 @@ void JoystickController::handleDigitalMode() {
     handleCZButtonPress(Z_BUTTON, B_BUTTON);
     handleCZButtonPress(C_BUTTON, A_BUTTON);
 
-    // TODO: POV hat does not detect diagonal directions. Also, the hat direction should actuate at
-    //  50% of the analog movement instead of 95%.
     handlePOVHat();
 }
 
@@ -66,16 +64,14 @@ void JoystickController::handleFPSLeftMode() {
     handleCZButtonPress(Z_BUTTON, LT);
     handleCZButtonPress(C_BUTTON, LB);
 
-    // TODO: Same analog issue as in Analog Mode since it is the same method.
     Joystick.X(getAnalogValueX());
-    Joystick.Y(getAnalogValueX());
+    Joystick.Y(getAnalogValueY());
 }
 
 void JoystickController::handleFPSRightMode() {
     handleCZButtonPress(Z_BUTTON, RT);
     handleCZButtonPress(C_BUTTON, RB);
 
-    // TODO: Z axes appear to move normally for the first few analog steps but quickly maxes out.
     Joystick.Z(getAnalogValueY());
     Joystick.Zrotate(getAnalogValueX());
 }
@@ -90,6 +86,8 @@ void JoystickController::handleButtonMode() {
 }
 
 void JoystickController::handleSelectMode() {
+    resetAllInputs();
+
     if (nunchuck->buttonCPressed()) {
         setActive(false);
     }
@@ -141,7 +139,7 @@ void JoystickController::handleButtonPress(bool isPressed, bool isReleased, uint
 }
 
 void JoystickController::handlePOVHat() {
-    switch (nunchuck->getDigitalDirection()) {
+    switch (nunchuck->getDigitalDirection(50)) {
         case UP:
             Joystick.hat(0);
             break;
@@ -172,9 +170,44 @@ void JoystickController::handlePOVHat() {
 }
 
 uint16_t JoystickController::getAnalogValueX() {
-    return nunchuck->getCurrentInput().analogX * 1024 / (MAX_X - MIN_X);
+    return getAnalogValue(nunchuck->getCurrentInput().analogX, CENTER_X);
 }
 
 uint16_t JoystickController::getAnalogValueY() {
-    return nunchuck->getCurrentInput().analogY * 1024 / (MAX_Y - MIN_Y);
+    return getAnalogValue(nunchuck->getCurrentInput().analogY, CENTER_Y, true);
+}
+
+uint16_t JoystickController::getAnalogValue(int analog, int center, bool inverted) {
+    int16_t joyAnalog;
+
+    if (analog == center) {
+        joyAnalog = 512;
+    } else if (analog > center) {
+        joyAnalog = 512 + ((analog - center) * (512 / 100));
+    } else {
+        joyAnalog = 512 - ((center - analog) * (512 / 100));
+    }
+
+    if (inverted) {
+        joyAnalog = 1023 - joyAnalog;
+    }
+
+    if (joyAnalog < 0) {
+        return 0;
+    } else if (joyAnalog > 1023) {
+        return 1023;
+    } else {
+        return static_cast<uint16_t>(joyAnalog);
+    }
+}
+
+void JoystickController::resetAllInputs() {
+    Joystick.hat(-1);
+    Joystick.X(512);
+    Joystick.Y(512);
+    Joystick.Z(512);
+    Joystick.Zrotate(512);
+    for (int i = 1; i <= 10; i++) {
+        Joystick.button(i, false);
+    }
 }
