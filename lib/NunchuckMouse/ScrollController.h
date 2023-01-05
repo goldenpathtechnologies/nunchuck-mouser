@@ -16,7 +16,9 @@ public:
     void handle();
 private:
     NunchuckController *nunchuck;
-    elapsedMillis scrollDelay;
+    elapsedMillis scrollDelayTimer;
+    elapsedMillis scrollMaxTimerY;
+    elapsedMillis scrollMaxTimerX;
     static int getPrecision(float analogPercentage);
 };
 #endif //NUNCHUCK_MOUSER_SCROLLCONTROLLER_H

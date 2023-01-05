@@ -23,13 +23,29 @@ void ScrollController::handle() {
             static_cast<int8_t>(
                     nunchuck->getDirectionY()
                     * getPrecision(nunchuck->getAnalogPercentY()));
+    int yScrollDelay = 100;
+    int xScrollDelay = 50;
 
-    if (yMovement != 0 && scrollDelay > 100) {
+    if (abs(yMovement) < 3) {
+        scrollMaxTimerY = 0;
+    } else if (scrollMaxTimerY > 2000 && scrollMaxTimerY <= 4500) {
+        yScrollDelay = 50;
+    } else if (scrollMaxTimerY > 4500) {
+        yScrollDelay = 0;
+    }
+
+    if (abs(xMovement) < 3) {
+        scrollMaxTimerX = 0;
+    } else if (scrollMaxTimerX > 2000) {
+        xScrollDelay = 50;
+    }
+
+    if (yMovement != 0 && scrollDelayTimer > yScrollDelay) {
         Mouse.scroll(yMovement);
-        scrollDelay = 0;
-    } else if (xMovement != 0 && scrollDelay > 50) {
+        scrollDelayTimer = 0;
+    } else if (xMovement != 0 && scrollDelayTimer > xScrollDelay) {
         Mouse.scroll(0, xMovement);
-        scrollDelay = 0;
+        scrollDelayTimer = 0;
     }
 
     if (nunchuck->buttonCPressed()) {
@@ -49,6 +65,4 @@ int ScrollController::getPrecision(float analogPercentage) {
     } else {
         return 3;
     }
-
-    // TODO: If scrolling occurs for more than a few seconds, increase the precision by a lot.
 }

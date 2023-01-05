@@ -17,9 +17,6 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
     nunchuck->updateInput(input);
     nunchuck->updateDirectionalState();
 
-    // TODO: If the prev and curr input is the same for a certain amount of time, put the Keyboard and Mouse to sleep.
-    //  When this changes, wake them up.
-
     updateMode();
 
     switch (nunchuck->getMode()) {
