@@ -8,4 +8,11 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "TBD"
   release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - run: echo "TBD"
