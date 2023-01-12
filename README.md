@@ -161,7 +161,6 @@ to use, but it can also be a daily driver.
 | Price                       | All parts can be purchased for under $25 CAD, but experience with hardware assembly and soldering required           | Cheapest Pen-grip model is $140 CAD, but doesn't require technical skill to use                                                   |
 | Support                     | None                                                                                                                 | Excellent customer support                                                                                                        |
 
-
 ## License
 
-Nunchuck Mouser is [MIT](https://TBD) licensed.
+Nunchuck Mouser is [MIT](https://github.com/goldenpathtechnologies/nunchuck-mouser/blob/main/LICENSE) licensed.
