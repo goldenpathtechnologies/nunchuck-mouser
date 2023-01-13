@@ -39,10 +39,10 @@ float NunchuckController::getAnalogPercentX() const {
         return 0;
     } else if (currInput.analogX >= LIVE_POS_X) {
         return static_cast<float>(
-                (currInput.analogX - LIVE_POS_X) * 100) / static_cast<float>(RANGE_POS_X);
+                (currInput.analogX - LIVE_POS_X) * ANALOG_RADIUS) / static_cast<float>(RANGE_POS_X);
     } else {
         return static_cast<float>(
-                (LIVE_NEG_X - currInput.analogX) * -100) / static_cast<float>(RANGE_NEG_X);
+                (LIVE_NEG_X - currInput.analogX) * -ANALOG_RADIUS) / static_cast<float>(RANGE_NEG_X);
     }
 }
 
@@ -51,10 +51,10 @@ float NunchuckController::getAnalogPercentY() const {
         return 0;
     } else if (currInput.analogY >= LIVE_POS_Y) {
         return static_cast<float>(
-                (currInput.analogY - LIVE_POS_Y) * 100) / static_cast<float>(RANGE_POS_Y);
+                (currInput.analogY - LIVE_POS_Y) * ANALOG_RADIUS) / static_cast<float>(RANGE_POS_Y);
     } else {
         return static_cast<float>(
-                (LIVE_NEG_Y - currInput.analogY) * -100) / static_cast<float>(RANGE_NEG_Y);
+                (LIVE_NEG_Y - currInput.analogY) * -ANALOG_RADIUS) / static_cast<float>(RANGE_NEG_Y);
     }
 }
 

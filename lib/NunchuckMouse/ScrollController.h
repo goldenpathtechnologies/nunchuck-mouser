@@ -15,10 +15,15 @@ public:
     bool isActive();
     void handle();
 private:
+    enum ScrollSpeed {
+        SLOW = 1,
+        MEDIUM,
+        FAST
+    };
     NunchuckController *nunchuck;
     elapsedMillis scrollDelayTimer;
     elapsedMillis scrollMaxTimerY;
     elapsedMillis scrollMaxTimerX;
-    static int getPrecision(float analogPercentage);
+    static int getScrollSpeed(float analogPercentage);
 };
 #endif //NUNCHUCK_MOUSER_SCROLLCONTROLLER_H

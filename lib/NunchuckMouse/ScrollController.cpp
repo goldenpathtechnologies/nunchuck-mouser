@@ -4,6 +4,7 @@
 //
 
 #include "ScrollController.h"
+#include "Constants.h"
 
 ScrollController::ScrollController(NunchuckController *device) {
     nunchuck = device;
@@ -18,26 +19,27 @@ void ScrollController::handle() {
     auto xMovement =
             static_cast<int8_t>(
                     nunchuck->getDirectionX()
-                    * getPrecision(nunchuck->getAnalogPercentX()));
+                    * getScrollSpeed(nunchuck->getAnalogPercentX()));
     auto yMovement =
             static_cast<int8_t>(
                     nunchuck->getDirectionY()
-                    * getPrecision(nunchuck->getAnalogPercentY()));
-    int yScrollDelay = 100;
-    int xScrollDelay = 50;
+                    * getScrollSpeed(nunchuck->getAnalogPercentY()));
+    int yScrollDelay = SCROLL_DELAY_Y;
+    int xScrollDelay = SCROLL_DELAY_X;
 
-    if (abs(yMovement) < 3) {
+    if (abs(yMovement) < FAST) {
         scrollMaxTimerY = 0;
-    } else if (scrollMaxTimerY > 2000 && scrollMaxTimerY <= 4500) {
-        yScrollDelay = 50;
-    } else if (scrollMaxTimerY > 4500) {
-        yScrollDelay = 0;
+    } else if (scrollMaxTimerY > FAST_SCROLL_ACTIVATION_TIME
+            && scrollMaxTimerY <= MAX_SCROLL_ACTIVATION_TIME) {
+        yScrollDelay = SCROLL_DELAY_Y_FAST;
+    } else if (scrollMaxTimerY > MAX_SCROLL_ACTIVATION_TIME) {
+        yScrollDelay = SCROLL_DELAY_Y_MAX;
     }
 
-    if (abs(xMovement) < 3) {
+    if (abs(xMovement) < FAST) {
         scrollMaxTimerX = 0;
-    } else if (scrollMaxTimerX > 2000) {
-        xScrollDelay = 50;
+    } else if (scrollMaxTimerX > FAST_SCROLL_ACTIVATION_TIME) {
+        xScrollDelay = SCROLL_DELAY_X_FAST;
     }
 
     if (yMovement != 0 && scrollDelayTimer > yScrollDelay) {
@@ -55,14 +57,14 @@ void ScrollController::handle() {
     }
 }
 
-int ScrollController::getPrecision(float analogPercentage) {
+int ScrollController::getScrollSpeed(float analogPercentage) {
     float data = abs(analogPercentage);
 
     if (data < 50) {
-        return 1;
+        return SLOW;
     } else if (data < 70) {
-        return 2;
+        return MEDIUM;
     } else {
-        return 3;
+        return FAST;
     }
 }
