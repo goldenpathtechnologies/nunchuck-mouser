@@ -1,5 +1,7 @@
 # Nunchuck Mouser
 
+![Build status](https://github.com/goldenpathtechnologies/nunchuck-mouser/actions/workflows/build.yml/badge.svg?branch=main)
+![Build status dev](https://github.com/goldenpathtechnologies/nunchuck-mouser/actions/workflows/build.yml/badge.svg?branch=dev)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 An Arduino project that turns a Wii Nunchuck into a multifunction mouse compatible with both right and left-handed
