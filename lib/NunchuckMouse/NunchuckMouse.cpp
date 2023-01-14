@@ -33,10 +33,18 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
 
 void NunchuckMouse::updateMode() {
     if (keyboard->isActive()) {
+        if (nunchuck->getMode() == MOUSE) Mouse.release(MOUSE_ALL);
         nunchuck->setMode(KEYBOARD);
     } else if (scroller->isActive()) {
+        if (nunchuck->getMode() == MOUSE)
+            Mouse.release(MOUSE_LEFT | MOUSE_RIGHT);
         nunchuck->setMode(SCROLL);
     } else {
+        if (nunchuck->getMode() == SCROLL) {
+            Mouse.release(MOUSE_MIDDLE);
+        } else if (nunchuck->getMode() == KEYBOARD) {
+            Keyboard.releaseAll();
+        }
         nunchuck->setMode(MOUSE);
     }
 }

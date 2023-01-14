@@ -34,12 +34,16 @@ bool KeyboardController::isActive() const {
 
 void KeyboardController::updateKeyboardMode() {
     if (nunchuck->isSideTilted()) {
+        if (keyboardMode != NAVIGATION_PLUS) Keyboard.releaseAll();
         keyboardMode = NAVIGATION_PLUS;
     } else if (nunchuck->isTiltedUp()) {
+        if (keyboardMode != MEDIA) Keyboard.releaseAll();
         keyboardMode = MEDIA;
     } else if (nunchuck->isTiltedDown()) {
+        if (keyboardMode != EXIT) Keyboard.releaseAll();
         keyboardMode = EXIT;
     } else {
+        if (keyboardMode != NAVIGATION) Keyboard.releaseAll();
         keyboardMode = NAVIGATION;
     }
 }
