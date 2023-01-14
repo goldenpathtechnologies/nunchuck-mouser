@@ -1,3 +1,10 @@
+## [1.0.0-dev.2](https://github.com/goldenpathtechnologies/nunchuck-mouser/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2023-01-14)
+
+
+### Features
+
+* set Z button in Scroll mode to open OS application switch view ([fade7fe](https://github.com/goldenpathtechnologies/nunchuck-mouser/commit/fade7fe81c5e06d1974b095204c6b2bb6acde726))
+
 ## 1.0.0-dev.1 (2023-01-14)
 
 
