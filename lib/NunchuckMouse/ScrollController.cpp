@@ -55,6 +55,14 @@ void ScrollController::handle() {
     } else if (nunchuck->buttonCReleased()) {
         Mouse.release(MOUSE_MIDDLE);
     }
+
+    if (nunchuck->buttonZPressed()) {
+        Keyboard.press(MODIFIERKEY_GUI);
+        Keyboard.press(KEY_TAB);
+    } else if (nunchuck->buttonZReleased()) {
+        Keyboard.release(KEY_TAB);
+        Keyboard.release(MODIFIERKEY_GUI);
+    }
 }
 
 int ScrollController::getScrollSpeed(float analogPercentage) {

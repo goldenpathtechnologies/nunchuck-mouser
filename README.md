@@ -60,12 +60,12 @@ stick is extended.
 This mode is activated from the Mouse mode by tilting the nunchuck to the left or right. Tilting the nunchuck back
 to its default upright position brings it back to Mouse mode.
 
-| Control       | Description         |
-|---------------|---------------------|
-| Analog Y axis | Scroll vertically   |
-| Analog X axis | Scroll horizontally |
-| C Button      | Middle mouse button |
-| Z Button      | Not used            |
+| Control       | Description                                                                                       |
+|---------------|---------------------------------------------------------------------------------------------------|
+| Analog Y axis | Scroll vertically                                                                                 |
+| Analog X axis | Scroll horizontally                                                                               |
+| C Button      | Middle mouse button                                                                               |
+| Z Button      | Opens application switching view in Windows, Linux, and macOS (mapped to Win/Super/Command + Tab) |
 
 ### Keyboard
 
