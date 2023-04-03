@@ -3,15 +3,16 @@
 // Copyright (c) 2022 Golden Path Technologies Inc. MIT Licence.
 //
 
-#include <NunchuckMouse.h>
 #include <Arduino.h>
+#include <HID-Project.h>
+#include "NunchuckMouse.h"
 
 NunchuckMouse::NunchuckMouse() {
     nunchuck = new NunchuckController();
     scroller = new ScrollController(nunchuck);
     keyboard = new KeyboardController(nunchuck);
     mouse = new MouseController(nunchuck, keyboard);
-};
+}
 
 void NunchuckMouse::processInputs(NunchuckInput *input) {
     nunchuck->updateInput(input);

@@ -5,6 +5,7 @@
 
 #ifndef NUNCHUCK_MOUSER_KEYBOARDCONTROLLER_H
 #define NUNCHUCK_MOUSER_KEYBOARDCONTROLLER_H
+#include <HID-Project.h>
 #include "NunchuckController.h"
 
 class KeyboardController {
@@ -21,6 +22,12 @@ private:
         MEDIA,
         EXIT
     };
+    struct Keycode {
+        KeyboardKeycode keyboardKey = KEY_RESERVED;
+        ConsumerKeycode consumerKey = HID_CONSUMER_UNASSIGNED;
+        explicit Keycode(KeyboardKeycode keyboardKey): keyboardKey(keyboardKey) {}
+        explicit Keycode(ConsumerKeycode consumerKey): consumerKey(consumerKey) {}
+    };
     NunchuckController *nunchuck;
     bool isActivated = false;
     KeyboardMode keyboardMode = NAVIGATION;
@@ -29,7 +36,12 @@ private:
     void handleNavigationPlusMode();
     void handleMediaMode();
     void handleExitMode();
-    void handleDirectionalButtonPress(DirectionalButtons direction, int key);
-    void handleCZButtonPress(NunchuckButtons button, int key, bool noButtonRollover = false);
+    static void press(Keycode key);
+    static void release(Keycode key);
+    void handleDirectionalButtonPress(DirectionalButtons direction, Keycode key);
+    void handleDirectionalButtonPress(DirectionalButtons direction, Keycode keys[], uint8_t numKeys);
+    void handleCZButtonPress(NunchuckButtons button, Keycode key, bool noButtonRollover = false);
+    void handleCZButtonPress(NunchuckButtons button, Keycode keys[], uint8_t numKeys, bool noButtonRollover = false);
+
 };
 #endif //NUNCHUCK_MOUSER_KEYBOARDCONTROLLER_H

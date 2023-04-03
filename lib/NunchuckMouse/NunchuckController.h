@@ -24,11 +24,11 @@ enum NunchuckMode {
 };
 
 enum DirectionalButtons {
-    NONE = 0x0000,
-    UP = 0x0001,
-    DOWN = 0x0010,
-    LEFT = 0x0100,
-    RIGHT = 0x1000
+    NONE = 0x00,
+    UP = 0x01,
+    DOWN = 0x02,
+    LEFT = 0x04,
+    RIGHT = 0x08
 };
 
 enum NunchuckButtons {

@@ -4,6 +4,7 @@
 //
 
 #include <Arduino.h>
+#include <HID-Project.h>
 #include "MouseController.h"
 
 MouseController::MouseController(NunchuckController *device, KeyboardController *keyboardController) {

@@ -7,30 +7,59 @@
 An Arduino project that turns a Wii Nunchuck into a multifunction mouse compatible with both right and left-handed
 users.
 
-## Assembly
+## Prototyping
 
 Nunchuck Mouser receives input from the Wii Nunchuck via I2C. Any Arduino-compatible board that
-supports I2C (SDA and SCL pins), and outputs 3V should work with this program.
+supports I2C (SDA and SCL pins), and outputs 3V should work with this program. Currently, only the
+Adafruit Trinket M0 is supported for now.
 
 ### Materials
 
 - Wii Nunchuck
-- Microprocessor board with 3V output
-- [Nunchuck adapter](https://learn.adafruit.com/adafruit-wii-nunchuck-breakout-adapter)
+- [Adafruit Trinket M0 dev board](https://www.adafruit.com/product/3500)
+- [Nunchuck adapter](https://www.adafruit.com/product/4836)
 - Breadboard
-- Wire
-- USB cable
+- Male-Male jumper wires x4
+- Micro USB cable
+- Breakaway header pins x15 (comes with Trinket M0 and nunchuck adapter)
+- Rosin core solder
+- Soldering iron
 
-Nunchuck assembly is straightforward if the board has clearly labeled pins, or if a datasheet
-is available. Connect the pins of the Nunchuck adapter board to the corresponding pins of your
-microprocessor board. Connect the Wii Nunchuck to the nunchuck adapter. Connect your board to
-your computer via USB.
+### Assembly
+
+Solder the header pins to the I/O pins on the Trinket M0 and the nunchuck adapter. You can use the breadboard
+to help keep the pins aligned while soldering.
+
+Connect the Trinket M0 and the nunchuck adapter to the breadboard.
+
+Connect the jumper wires as follows:
+
+| Trinket M0 Pins | Nunchuck adapter pins |
+|-----------------|-----------------------|
+| 3V              | 3V                    |
+| Gnd             | Gnd                   |
+| 0               | SDA                   |
+| 2               | SCL                   |
+
+Connect the Wii Nunchuck to the nunchuck adapter and the Micro USB cable to the Trinket M0. When you're
+to load the firmware onto the Trinket, plug the USB cable into your computer.
+
+## Finished product
+
+This is a work in progress. This documentation will be updated when the finished product is completed.
+
+### Materials
+
+TBD
+
+### Assembly
+
+TBD
 
 ## Firmware installation
 
 Nunchuck Mouser was developed with the PlatformIO IDE platform. You will need a PlatformIO compatible IDE
-to build and upload Nunchuck Mouser to your board. Consult the PlatformIO docs on how to upload this code
-to your board.
+to build and upload Nunchuck Mouser to the Trinket M0. Consult the PlatformIO docs on how to accomplish this.
 
 ## Usage/modes
 
@@ -65,7 +94,7 @@ to its default upright position brings it back to Mouse mode.
 | Control       | Description                                                                                       |
 |---------------|---------------------------------------------------------------------------------------------------|
 | Analog Y axis | Scroll vertically                                                                                 |
-| Analog X axis | Scroll horizontally                                                                               |
+| Analog X axis | Scroll horizontally (currently disabled, awaiting updates to HID library)                         |
 | C Button      | Middle mouse button                                                                               |
 | Z Button      | Opens application switching view in Windows, Linux, and macOS (mapped to Win/Super/Command + Tab) |
 
@@ -119,18 +148,18 @@ is tilted upwards and deactivated when no longer tilted.
 This keyboard mode enables the button that exits this mode, in addition to providing extra helpful keys. This
 mode is activated when the nunchuck is tilted downwards and deactivated when no longer tilted.
 
-| Control      | Description                                                  |
-|--------------|--------------------------------------------------------------|
-| C Button     | Return to Mouse mode                                         |
-| Z Button     | Esc                                                          |
-| Analog Up    | Windows/Super/Command key                                    |
-| Analog Down  | Delete                                                       |
-| Analog Left  | Hyper Shift+Ctrl+Alt+Win (useful for custom keyboard macros) |
-| Analog Right | Meh Shift+Ctrl+Alt (useful for custom keyboard macros)       |
+| Control      | Description                                                   |
+|--------------|---------------------------------------------------------------|
+| C Button     | Return to Mouse mode                                          |
+| Z Button     | Esc                                                           |
+| Analog Up    | Windows/Super/Command key                                     |
+| Analog Down  | Delete                                                        |
+| Analog Left  | Hyper: Shift+Ctrl+Alt+Win (useful for custom keyboard macros) |
+| Analog Right | Meh: Shift+Ctrl+Alt (useful for custom keyboard macros)       |
 
 ## Supported hardware
 
-- Teensy 2.0
+- [Adafruit Trinket M0](https://www.adafruit.com/product/3500)
 
 ## Background
 
@@ -149,19 +178,19 @@ to use, but it can also be a daily driver.
 
 ### Nunchuck Mouser vs. Swiftpoint Pen-grip mice
 
-|                             | Nunchuck Mouser                                                                                                      | Swiftpoint Pen-grip Mouse                                                                                                         |
-|-----------------------------|----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| Handedness                  | Usable in both left and right hands                                                                                  | Usable in the right hand only                                                                                                     |
-| Accuracy                    | Limited accuracy due to analog stick control                                                                         | High accuracy due to direct hand control of cursor                                                                                |
-| Speed                       | Cursor speed limited due to analog stick control                                                                     | High sensitivity enables fast cursor speed with minimal hand movements                                                            |   
-| Flexibility                 | Doesn't require a surface to operate                                                                                 | Requires a surface to operate                                                                                                     |
-| Comfort                     | Comfortable in the hands and intuitive to use                                                                        | Has a short learning curve to overcome before it can be used comfortably and can be offputting to people used to traditional mice |
-| Supporting software         | Fully functional without supporting software                                                                         | Requires the Swiftpoint Control Panel to enable all features                                                                      |
-| Software freedom            | Mouse software is free and open source (MIT License)                                                                 | Mouse software is closed source and only accessible to Swiftpoint                                                                 |
-| Hardware freedom            | Nunchuck hardware is proprietary but with a publicly available API, while supporting microcontrollers are fully open | Mouse hardware is proprietary and can only update its firmware via the Swiftpoint Control Panel                                   |
-| Supported operating systems | All operating systems                                                                                                | Windows and macOS support only                                                                                                    |
-| Price                       | All parts can be purchased for under $25 CAD, but experience with hardware assembly and soldering required           | Cheapest Pen-grip model is $140 CAD, but doesn't require technical skill to use                                                   |
-| Support                     | None                                                                                                                 | Excellent customer support                                                                                                        |
+|                                 | Nunchuck Mouser                                                                                                      | Swiftpoint Pen-grip Mouse                                                                                                         |
+|---------------------------------|----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| **Handedness**                  | Usable in both left and right hands                                                                                  | Usable in the right hand only                                                                                                     |
+| **Accuracy**                    | Limited accuracy due to analog stick control                                                                         | High accuracy due to direct hand control of cursor                                                                                |
+| **Speed**                       | Cursor speed limited due to analog stick control                                                                     | High sensitivity enables fast cursor speed with minimal hand movements                                                            |   
+| **Flexibility**                 | Doesn't require a surface to operate                                                                                 | Requires a surface to operate                                                                                                     |
+| **Comfort**                     | Comfortable in the hands and intuitive to use                                                                        | Has a short learning curve to overcome before it can be used comfortably and can be offputting to people used to traditional mice |
+| **Supporting software**         | Fully functional without supporting software                                                                         | Requires the Swiftpoint Control Panel to enable all features                                                                      |
+| **Software freedom**            | Mouse software is free and open source (MIT License)                                                                 | Mouse software is closed source and only accessible to Swiftpoint                                                                 |
+| **Hardware freedom**            | Nunchuck hardware is proprietary but with a publicly available API, while supporting microcontrollers are fully open | Mouse hardware is proprietary and can only update its firmware via the Swiftpoint Control Panel                                   |
+| **Supported operating systems** | All operating systems                                                                                                | Windows and macOS support only                                                                                                    |
+| **Price**                       | All parts can be purchased for under $25 CAD, but experience with hardware assembly and soldering required           | Cheapest Pen-grip model is $140 CAD, but doesn't require technical skill to use                                                   |
+| **Support**                     | None                                                                                                                 | Excellent customer support                                                                                                        |
 
 ## License
 

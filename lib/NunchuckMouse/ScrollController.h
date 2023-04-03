@@ -6,6 +6,7 @@
 #ifndef NUNCHUCK_MOUSER_SCROLLCONTROLLER_H
 #define NUNCHUCK_MOUSER_SCROLLCONTROLLER_H
 #include <Arduino.h>
+#include <elapsedMillis.h>
 #include "NunchuckController.h"
 
 class ScrollController {

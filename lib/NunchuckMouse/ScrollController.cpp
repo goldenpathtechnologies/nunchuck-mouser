@@ -3,6 +3,7 @@
 // Copyright (c) 2022 Golden Path Technologies Inc. MIT Licence.
 //
 
+#include <HID-Project.h>
 #include "ScrollController.h"
 #include "Constants.h"
 
@@ -43,11 +44,13 @@ void ScrollController::handle() {
     }
 
     if (yMovement != 0 && scrollDelayTimer > yScrollDelay) {
-        Mouse.scroll(yMovement);
+        Mouse.move(0, 0, yMovement);
         scrollDelayTimer = 0;
     } else if (xMovement != 0 && scrollDelayTimer > xScrollDelay) {
-        Mouse.scroll(0, xMovement);
-        scrollDelayTimer = 0;
+        // TODO: Use new Mouse.scroll method to scroll both horizontally and vertically. Awaiting this
+        //  feature to be merged to HID-Project. See: https://github.com/NicoHood/HID/pull/393
+//        Mouse.move(0, 0, xMovement);
+//        scrollDelayTimer = 0;
     }
 
     if (nunchuck->buttonCPressed()) {
@@ -57,11 +60,11 @@ void ScrollController::handle() {
     }
 
     if (nunchuck->buttonZPressed()) {
-        Keyboard.press(MODIFIERKEY_GUI);
+        Keyboard.press(KEY_LEFT_GUI);
         Keyboard.press(KEY_TAB);
     } else if (nunchuck->buttonZReleased()) {
         Keyboard.release(KEY_TAB);
-        Keyboard.release(MODIFIERKEY_GUI);
+        Keyboard.release(KEY_LEFT_GUI);
     }
 }
 

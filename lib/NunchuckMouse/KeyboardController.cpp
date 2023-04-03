@@ -3,7 +3,7 @@
 // Copyright (c) 2022 Golden Path Technologies Inc. MIT Licence.
 //
 
-#include <Arduino.h>
+#include <HID-Project.h>
 #include "KeyboardController.h"
 
 void KeyboardController::handle() {
@@ -49,33 +49,30 @@ void KeyboardController::updateKeyboardMode() {
 }
 
 void KeyboardController::handleNavigationMode() {
-    handleCZButtonPress(Z_BUTTON, KEY_ENTER, true);
-    handleCZButtonPress(C_BUTTON, KEY_BACKSPACE, true);
-    handleDirectionalButtonPress(UP, KEY_UP_ARROW);
-    handleDirectionalButtonPress(DOWN, KEY_DOWN_ARROW);
-    handleDirectionalButtonPress(LEFT, KEY_LEFT_ARROW);
-    handleDirectionalButtonPress(RIGHT, KEY_RIGHT_ARROW);
+    handleCZButtonPress(Z_BUTTON, Keycode(KEY_ENTER), true);
+    handleCZButtonPress(C_BUTTON, Keycode(KEY_BACKSPACE), true);
+    handleDirectionalButtonPress(UP, Keycode(KEY_UP_ARROW));
+    handleDirectionalButtonPress(DOWN, Keycode(KEY_DOWN_ARROW));
+    handleDirectionalButtonPress(LEFT, Keycode(KEY_LEFT_ARROW));
+    handleDirectionalButtonPress(RIGHT, Keycode(KEY_RIGHT_ARROW));
 }
 
 void KeyboardController::handleNavigationPlusMode() {
-    handleCZButtonPress(Z_BUTTON, KEY_SPACE, true);
-    handleCZButtonPress(C_BUTTON, KEY_TAB, true);
-    handleDirectionalButtonPress(LEFT, KEY_HOME);
-    handleDirectionalButtonPress(RIGHT, KEY_END);
-    handleDirectionalButtonPress(UP, KEY_PAGE_UP);
-    handleDirectionalButtonPress(DOWN, KEY_PAGE_DOWN);
+    handleCZButtonPress(Z_BUTTON, Keycode(KEY_SPACE), true);
+    handleCZButtonPress(C_BUTTON, Keycode(KEY_TAB), true);
+    handleDirectionalButtonPress(LEFT, Keycode(KEY_HOME));
+    handleDirectionalButtonPress(RIGHT, Keycode(KEY_END));
+    handleDirectionalButtonPress(UP, Keycode(KEY_PAGE_UP));
+    handleDirectionalButtonPress(DOWN, Keycode(KEY_PAGE_DOWN));
 }
 
 void KeyboardController::handleMediaMode() {
-    // Note: Media keys will not work on Teensy 2.0 when Serial port is enabled;
-    //  https://forum.pjrc.com/threads/34074-Keyboard-Media-Keys-now-(hopefully)-Windows-compatible?p=102516&viewfull=1#post102516
-    //  Ensure build_flags field in platformio.ini is set to "-D USB_HID"
-    handleCZButtonPress(Z_BUTTON, KEY_MEDIA_PLAY_PAUSE);
-    handleCZButtonPress(C_BUTTON, KEY_MEDIA_MUTE);
-    handleDirectionalButtonPress(UP, KEY_MEDIA_VOLUME_INC);
-    handleDirectionalButtonPress(DOWN, KEY_MEDIA_VOLUME_DEC);
-    handleDirectionalButtonPress(LEFT, KEY_MEDIA_PREV_TRACK);
-    handleDirectionalButtonPress(RIGHT, KEY_MEDIA_NEXT_TRACK);
+    handleCZButtonPress(Z_BUTTON, Keycode(MEDIA_PLAY_PAUSE));
+    handleCZButtonPress(C_BUTTON, Keycode(MEDIA_VOLUME_MUTE));
+    handleDirectionalButtonPress(UP, Keycode(MEDIA_VOLUME_UP));
+    handleDirectionalButtonPress(DOWN, Keycode(MEDIA_VOLUME_DOWN));
+    handleDirectionalButtonPress(LEFT, Keycode(MEDIA_PREV));
+    handleDirectionalButtonPress(RIGHT, Keycode(MEDIA_NEXT));
 }
 
 void KeyboardController::handleExitMode() {
@@ -83,41 +80,68 @@ void KeyboardController::handleExitMode() {
         setActive(false);
     }
 
-    handleCZButtonPress(Z_BUTTON, KEY_ESC, true);
-    handleDirectionalButtonPress(UP, MODIFIERKEY_GUI);
-    handleDirectionalButtonPress(DOWN, KEY_DELETE);
-    handleDirectionalButtonPress(
-            LEFT,
-            MODIFIERKEY_CTRL + MODIFIERKEY_ALT + MODIFIERKEY_SHIFT + MODIFIERKEY_GUI);
-    handleDirectionalButtonPress(
-            RIGHT,
-            MODIFIERKEY_CTRL + MODIFIERKEY_ALT + MODIFIERKEY_SHIFT);
+    handleCZButtonPress(Z_BUTTON, Keycode(KEY_ESC), true);
+    handleDirectionalButtonPress(UP, Keycode(KEY_LEFT_GUI));
+    handleDirectionalButtonPress(DOWN, Keycode(KEY_DELETE));
+
+    Keycode hyperKeys[4] = {Keycode(KEY_LEFT_CTRL), Keycode(KEY_LEFT_ALT), Keycode(KEY_LEFT_SHIFT), Keycode(KEY_LEFT_GUI)};
+    Keycode mehKeys[3] = {Keycode(KEY_LEFT_CTRL), Keycode(KEY_LEFT_ALT), Keycode(KEY_LEFT_SHIFT)};
+    handleDirectionalButtonPress(LEFT, hyperKeys, 4);
+    handleDirectionalButtonPress(RIGHT, mehKeys, 3);
 }
 
 KeyboardController::KeyboardController(NunchuckController *device) {
     nunchuck = device;
 }
 
-void KeyboardController::handleDirectionalButtonPress(DirectionalButtons direction, int key) {
-    if (nunchuck->directionPressed(direction)) {
-        Keyboard.press(key);
-    } else if (nunchuck->directionReleased(direction)) {
-        Keyboard.release(key);
+void KeyboardController::press(Keycode key) {
+    if (key.keyboardKey != KEY_RESERVED) {
+        Keyboard.press(key.keyboardKey);
+    } else if (key.consumerKey != HID_CONSUMER_UNASSIGNED) {
+        Consumer.press(key.consumerKey);
     }
 }
 
-void KeyboardController::handleCZButtonPress(NunchuckButtons button, int key, bool noButtonRollover) {
+void KeyboardController::release(Keycode key) {
+    if (key.keyboardKey != KEY_RESERVED) {
+        Keyboard.release(key.keyboardKey);
+    } else if (key.consumerKey != HID_CONSUMER_UNASSIGNED) {
+        Consumer.release(key.consumerKey);
+    }
+}
+
+void KeyboardController::handleDirectionalButtonPress(DirectionalButtons direction, Keycode key) {
+    if (nunchuck->directionPressed(direction)) {
+        press(key);
+    } else if (nunchuck->directionReleased(direction)) {
+        release(key);
+    }
+}
+
+void KeyboardController::handleDirectionalButtonPress(DirectionalButtons direction, Keycode keys[], uint8_t numKeys) {
+    for (int i = 0; i < numKeys; i++) {
+        handleDirectionalButtonPress(direction, keys[i]);
+    }
+}
+
+void KeyboardController::handleCZButtonPress(NunchuckButtons button, Keycode key, bool noButtonRollover) {
     if (button == C_BUTTON) {
         if (nunchuck->buttonCPressed() && !(nunchuck->getCurrentInput().buttonZ && noButtonRollover)) {
-            Keyboard.press(key);
+            press(key);
         } else if (nunchuck->buttonCReleased()) {
-            Keyboard.release(key);
+            release(key);
         }
     } else {
         if (nunchuck->buttonZPressed() && !(nunchuck->getCurrentInput().buttonC && noButtonRollover)) {
-            Keyboard.press(key);
+            press(key);
         } else if (nunchuck->buttonZReleased()) {
-            Keyboard.release(key);
+            release(key);
         }
+    }
+}
+
+void KeyboardController::handleCZButtonPress(NunchuckButtons button, Keycode keys[], uint8_t numKeys, bool noButtonRollover) {
+    for (int i = 0; i < numKeys; i++) {
+        handleCZButtonPress(button, keys[i], noButtonRollover);
     }
 }
