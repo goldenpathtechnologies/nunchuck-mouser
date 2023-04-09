@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{secrets.GH_TOKEN}}
@@ -41,7 +41,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade platformio
       - name: Run PlatformIO
-        run: pio run -e teensy2
+        run: pio run -e adafruit_trinket_m0
         env:
           PLATFORMIO_BUILD_FLAGS: -D USB_HID
 
@@ -51,12 +51,12 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{secrets.GH_TOKEN}}
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
       - name: Generate semantic-release configuration
