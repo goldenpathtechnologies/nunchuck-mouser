@@ -5,6 +5,7 @@
 
 #ifndef NUNCHUCK_MOUSER_NUNCHUCKCONTROLLER_H
 #define NUNCHUCK_MOUSER_NUNCHUCKCONTROLLER_H
+
 struct NunchuckInput {
     int analogX;
     int analogY;

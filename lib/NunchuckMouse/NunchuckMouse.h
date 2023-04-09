@@ -12,6 +12,7 @@
 #include "MouseController.h"
 #include "ScrollController.h"
 #include "KeyboardController.h"
+#include "LedController.h"
 
 class NunchuckMouse {
 public:
@@ -25,6 +26,7 @@ private:
     MouseController *mouse;
     ScrollController *scroller;
     KeyboardController *keyboard;
+    LedController *led;
     void updateMode();
 };
 #endif //NUNCHUCK_MOUSER_NUNCHUCKMOUSE_H

@@ -11,15 +11,19 @@ void KeyboardController::handle() {
 
     switch(keyboardMode) {
         case NAVIGATION_PLUS:
+            statusLed->setStatusColor(0x00FFFF);
             handleNavigationPlusMode();
             break;
         case MEDIA:
+            statusLed->setStatusColor(0xDAF7A6);
             handleMediaMode();
             break;
         case EXIT:
+            statusLed->setStatusColor(0xFF00FF);
             handleExitMode();
             break;
         default:
+            statusLed->setStatusColor(0xFFFF00);
             handleNavigationMode();
     }
 }
@@ -90,8 +94,9 @@ void KeyboardController::handleExitMode() {
     handleDirectionalButtonPress(RIGHT, mehKeys, 3);
 }
 
-KeyboardController::KeyboardController(NunchuckController *device) {
+KeyboardController::KeyboardController(NunchuckController *device, LedController *led) {
     nunchuck = device;
+    statusLed = led;
 }
 
 void KeyboardController::press(Keycode key) {

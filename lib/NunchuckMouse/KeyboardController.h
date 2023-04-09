@@ -7,10 +7,11 @@
 #define NUNCHUCK_MOUSER_KEYBOARDCONTROLLER_H
 #include <HID-Project.h>
 #include "NunchuckController.h"
+#include "LedController.h"
 
 class KeyboardController {
 public:
-    explicit KeyboardController(NunchuckController *device);
+    explicit KeyboardController(NunchuckController *device, LedController *led);
 
     void handle();
     void setActive(bool isActive);
@@ -29,6 +30,7 @@ private:
         explicit Keycode(ConsumerKeycode consumerKey): consumerKey(consumerKey) {}
     };
     NunchuckController *nunchuck;
+    LedController *statusLed;
     bool isActivated = false;
     KeyboardMode keyboardMode = NAVIGATION;
     void updateKeyboardMode();
@@ -42,6 +44,5 @@ private:
     void handleDirectionalButtonPress(DirectionalButtons direction, Keycode keys[], uint8_t numKeys);
     void handleCZButtonPress(NunchuckButtons button, Keycode key, bool noButtonRollover = false);
     void handleCZButtonPress(NunchuckButtons button, Keycode keys[], uint8_t numKeys, bool noButtonRollover = false);
-
 };
 #endif //NUNCHUCK_MOUSER_KEYBOARDCONTROLLER_H

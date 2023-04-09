@@ -8,9 +8,10 @@
 #include "NunchuckMouse.h"
 
 NunchuckMouse::NunchuckMouse() {
+    led = new LedController();
     nunchuck = new NunchuckController();
     scroller = new ScrollController(nunchuck);
-    keyboard = new KeyboardController(nunchuck);
+    keyboard = new KeyboardController(nunchuck, led);
     mouse = new MouseController(nunchuck, keyboard);
 }
 
@@ -20,14 +21,24 @@ void NunchuckMouse::processInputs(NunchuckInput *input) {
 
     updateMode();
 
+    if (nunchuck->isMoving()) {
+        led->enableActivityIndicator();
+    } else {
+        led->disableActivityIndicator();
+    }
+
+    led->update();
+
     switch (nunchuck->getMode()) {
         case KEYBOARD:
             keyboard->handle();
             break;
         case SCROLL:
+            led->setStatusColor(0xFF5733);
             scroller->handle();
             break;
         default:
+            led->resetStatusColor();
             mouse->handle();
     }
 }
