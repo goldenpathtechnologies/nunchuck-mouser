@@ -1,3 +1,10 @@
+## [2.0.0-dev.2](https://github.com/goldenpathtechnologies/nunchuck-mouser/compare/v2.0.0-dev.1...v2.0.0-dev.2) (2023-04-09)
+
+
+### Bug Fixes
+
+* increased pitch angle range of side tilt mode ([0b12272](https://github.com/goldenpathtechnologies/nunchuck-mouser/commit/0b122720a667abed77663a230d9dbeff25ba3179))
+
 ## [2.0.0-dev.1](https://github.com/goldenpathtechnologies/nunchuck-mouser/compare/v1.0.0...v2.0.0-dev.1) (2023-04-09)
 
 
