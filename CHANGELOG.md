@@ -1,3 +1,20 @@
+## [2.0.0](https://github.com/goldenpathtechnologies/nunchuck-mouser/compare/v1.0.0...v2.0.0) (2023-04-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* Switched device support from Teensy 2.0 to Adafruit Trinket M0
+
+### Features
+
+* changed supported device to Adafruit Trinket M0 ([a174640](https://github.com/goldenpathtechnologies/nunchuck-mouser/commit/a174640fdf63770a23e10059ad36b8dd9ce94be4))
+* display different colors on device LED to indicate nunchuck mode ([85d2c1c](https://github.com/goldenpathtechnologies/nunchuck-mouser/commit/85d2c1ccded7b439b817d38cd887db924f93c0b7))
+
+
+### Bug Fixes
+
+* increased pitch angle range of side tilt mode ([0b12272](https://github.com/goldenpathtechnologies/nunchuck-mouser/commit/0b122720a667abed77663a230d9dbeff25ba3179))
+
 ## [2.0.0-dev.2](https://github.com/goldenpathtechnologies/nunchuck-mouser/compare/v2.0.0-dev.1...v2.0.0-dev.2) (2023-04-09)
 
 
