@@ -78,7 +78,7 @@ bool NunchuckController::pitchAngleInRange(float a0, float a1) const {
 
 bool NunchuckController::isSideTilted() const {
     return (rollAngleInRange(40, 120) || rollAngleInRange(-120, -40))
-    && pitchAngleInRange(-35, 35);
+    && pitchAngleInRange(-55, 55);
 }
 
 bool NunchuckController::isTiltedUp() const {
